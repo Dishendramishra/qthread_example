@@ -12,4 +12,4 @@ pip install -r requirements.txt
 
 ### Demo run
 
-![image](C:\Users\ituser1\Desktop\qthread_example\demo.gif)
+![image](./demo.gif)
