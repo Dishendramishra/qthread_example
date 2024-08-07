@@ -6,7 +6,7 @@ import sys, time
 
 class ProgressBarThread(QThread):
     change_value =  Signal(int)
-    thread_finished = Signal(int)
+    thread_finished = Signal(int, str)
 
     def run(self):
         count = 0
@@ -15,7 +15,7 @@ class ProgressBarThread(QThread):
             time.sleep(0.01)
             self.change_value.emit(count)
         
-        self.thread_finished.emit(1)
+        self.thread_finished.emit(count, "Thread Finished!")
     
     def stop(self):
         self.is_running = False
@@ -63,11 +63,25 @@ class Window(QMainWindow):
     def stop_progressbar(self):
         if self.thread:
             self.thread.stop()
-            self.done_progressbar()
 
-    def done_progressbar(self):
         self.button.setDisabled(False)
         self.stop_button.setDisabled(True)
+
+        msgBox= QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
+        msgBox.setText(f"Thread stopped at {self.progressbar.value()}%")
+        msgBox.setStandardButtons(QMessageBox.Ok)
+        msgBox.exec_()
+
+    def done_progressbar(self, count=0, msg=""):
+        self.button.setDisabled(False)
+        self.stop_button.setDisabled(True)
+        
+        msgBox= QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
+        msgBox.setText(msg+f" {count}%")
+        msgBox.setStandardButtons(QMessageBox.Ok)
+        msgBox.exec_()
 
 app = QApplication(sys.argv)
 app.setStyle("Fusion")
